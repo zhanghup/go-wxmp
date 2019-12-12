@@ -1,4 +1,4 @@
-package go_wxmp
+package wxmp
 
 import (
 	"github.com/zhanghup/go-tools"

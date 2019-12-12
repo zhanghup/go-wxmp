@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3a2c4e22-41aa-43b0-8a8d-bcd8394990a7" name="Default Changelist" comment="" />
+    <list default="true" id="3a2c4e22-41aa-43b0-8a8d-bcd8394990a7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/example/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/message.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/context.go" beforeDir="false" afterPath="$PROJECT_DIR$/context.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/context_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/context_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jssdk.go" beforeDir="false" afterPath="$PROJECT_DIR$/jssdk.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jssdk_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/jssdk_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/material.go" beforeDir="false" afterPath="$PROJECT_DIR$/material.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/material_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/material_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menu.go" beforeDir="false" afterPath="$PROJECT_DIR$/menu.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menu_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/menu_test.go" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,15 +25,19 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/context.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2204">
-              <caret line="126" column="10" selection-start-line="126" selection-start-column="10" selection-end-line="126" selection-end-column="10" />
+            <state relative-caret-position="589">
+              <caret line="111" column="24" selection-start-line="111" selection-start-column="24" selection-end-line="111" selection-end-column="24" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jssdk_test.go">
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file://$USER_HOME$/go/pkg/mod/github.com/zhanghup/go-tools@v1.0.18/http.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="33" column="16" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -34,19 +50,68 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jssdk.go">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/material.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="25" column="91" selection-start-line="25" selection-start-column="91" selection-end-line="25" selection-end-column="91" />
+            <state relative-caret-position="1482">
+              <caret line="94" column="75" lean-forward="true" selection-start-line="94" selection-start-column="75" selection-end-line="94" selection-end-column="75" />
+              <folding>
+                <element signature="n#!!block;n#GetTempMaterial#0" />
+                <element signature="n#!!block;n#GetTempMaterialVideo#1" />
+                <element signature="n#!!block;n#NewTempMaterial#1" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/menu.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="76">
+              <caret line="4" selection-start-line="4" selection-end-line="26" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/message.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="416">
+              <caret line="22" column="35" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/example/main.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="361">
+              <caret line="19" column="9" lean-forward="true" selection-start-line="19" selection-start-column="9" selection-end-line="19" selection-end-column="9" />
+              <folding>
+                <element signature="e#14#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://I:/go/src/runtime/panic.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="274">
+              <caret line="846" selection-start-line="846" selection-end-line="846" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/material_test.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+            <state relative-caret-position="456">
+              <caret line="29" selection-start-line="29" selection-end-line="29" />
             </state>
           </provider>
         </entry>
@@ -60,6 +125,16 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>Menu</find>
+      <find>menu</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>messa</replace>
+      <replace>message</replace>
+    </replaceStrings>
+  </component>
   <component name="GOROOT" path="I:\Go" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -71,8 +146,10 @@
         <option value="$PROJECT_DIR$/context_test.go" />
         <option value="$PROJECT_DIR$/go.mod" />
         <option value="$PROJECT_DIR$/context.go" />
-        <option value="$PROJECT_DIR$/material.go" />
         <option value="$PROJECT_DIR$/material_test.go" />
+        <option value="$PROJECT_DIR$/material.go" />
+        <option value="$PROJECT_DIR$/message.go" />
+        <option value="$PROJECT_DIR$/example/main.go" />
       </list>
     </option>
   </component>
@@ -93,6 +170,11 @@
             <path>
               <item name="go-wxmp" type="b2602c69:ProjectViewProjectNode" />
               <item name="go-wxmp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="go-wxmp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="go-wxmp" type="462c0819:PsiDirectoryNode" />
+              <item name="example" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -134,7 +216,16 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Test.TestMaterial_NewTempMaterial in github.com/zhanghup/go-wxmp">
+  <component name="RunManager" selected="Go Build.go build main.go">
+    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="go-wxmp" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/example/main.go" />
+      <package value="github.com/zhanghup/go-wxmp" />
+      <directory value="$PROJECT_DIR$/" />
+      <method v="2" />
+    </configuration>
     <configuration name="TestJssdk_AuthUrl in github.com/zhanghup/go-wxmp" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="go-wxmp" />
       <working_directory value="$PROJECT_DIR$" />
@@ -144,6 +235,17 @@
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
       <pattern value="^TestJssdk_AuthUrl$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestMaterial_GetTempMaterial in github.com/zhanghup/go-wxmp" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="go-wxmp" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/zhanghup/go-wxmp" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestMaterial_GetTempMaterial$" />
       <method v="2" />
     </configuration>
     <configuration name="TestMaterial_NewTempMaterial in github.com/zhanghup/go-wxmp" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -157,16 +259,6 @@
       <pattern value="^TestMaterial_NewTempMaterial$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestToken in context_test.go (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="go-wxmp" />
-      <working_directory value="$PROJECT_DIR$/mp" />
-      <framework value="gotest" />
-      <kind value="FILE" />
-      <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/mp/context_test.go" />
-      <pattern value="^TestToken$" />
-      <method v="2" />
-    </configuration>
     <configuration name="TestToken in context_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="go-wxmp" />
       <working_directory value="$PROJECT_DIR$" />
@@ -177,39 +269,51 @@
       <pattern value="^TestToken$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestUrlEncode in context_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="go-wxmp" />
-      <working_directory value="$PROJECT_DIR$/mp" />
-      <framework value="gotest" />
-      <kind value="FILE" />
-      <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/mp/context_test.go" />
-      <pattern value="^TestUrlEncode$" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build main.go" />
+        <item itemvalue="Go Test.TestMaterial_GetTempMaterial in github.com/zhanghup/go-wxmp" />
         <item itemvalue="Go Test.TestMaterial_NewTempMaterial in github.com/zhanghup/go-wxmp" />
         <item itemvalue="Go Test.TestToken in context_test.go" />
         <item itemvalue="Go Test.TestJssdk_AuthUrl in github.com/zhanghup/go-wxmp" />
-        <item itemvalue="Go Test.TestToken in context_test.go (1)" />
-        <item itemvalue="Go Test.TestUrlEncode in context_test.go" />
       </list>
     </recent_temporary>
   </component>
   <component name="TestHistory">
-    <history-entry file="TestToken_in_context_test_go - 2019.12.12 at 15h 31m 22s.xml">
-      <configuration name="TestToken in context_test.go" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestMaterial_NewTempMaterial_in_github_com_zhanghup_go-wxmp - 2019.12.12 at 20h 38m 02s.xml">
+      <configuration name="TestMaterial_NewTempMaterial in github.com/zhanghup/go-wxmp" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestJssdk_AuthUrl_in_github_com_zhanghup_go-wxmp - 2019.12.12 at 15h 32m 10s.xml">
-      <configuration name="TestJssdk_AuthUrl in github.com/zhanghup/go-wxmp" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestMaterial_NewTempMaterial_in_github_com_zhanghup_go-wxmp - 2019.12.12 at 20h 38m 09s.xml">
+      <configuration name="TestMaterial_NewTempMaterial in github.com/zhanghup/go-wxmp" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestToken_in_context_test_go - 2019.12.12 at 15h 38m 49s.xml">
-      <configuration name="TestToken in context_test.go" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestMaterial_NewTempMaterial_in_github_com_zhanghup_go-wxmp - 2019.12.12 at 20h 38m 35s.xml">
+      <configuration name="TestMaterial_NewTempMaterial in github.com/zhanghup/go-wxmp" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestMaterial_NewTempMaterial_in_github_com_zhanghup_go-wxmp - 2019.12.12 at 20h 41m 56s.xml">
+      <configuration name="TestMaterial_NewTempMaterial in github.com/zhanghup/go-wxmp" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestMaterial_NewTempMaterial_in_github_com_zhanghup_go-wxmp - 2019.12.12 at 20h 42m 27s.xml">
+      <configuration name="TestMaterial_NewTempMaterial in github.com/zhanghup/go-wxmp" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestMaterial_NewTempMaterial_in_github_com_zhanghup_go-wxmp - 2019.12.12 at 20h 45m 32s.xml">
+      <configuration name="TestMaterial_NewTempMaterial in github.com/zhanghup/go-wxmp" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestMaterial_NewTempMaterial_in_github_com_zhanghup_go-wxmp - 2019.12.12 at 20h 45m 47s.xml">
+      <configuration name="TestMaterial_NewTempMaterial in github.com/zhanghup/go-wxmp" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestMaterial_GetTempMaterial_in_github_com_zhanghup_go-wxmp - 2019.12.12 at 20h 53m 38s.xml">
+      <configuration name="TestMaterial_GetTempMaterial in github.com/zhanghup/go-wxmp" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestMaterial_GetTempMaterial_in_github_com_zhanghup_go-wxmp - 2019.12.12 at 20h 56m 02s.xml">
+      <configuration name="TestMaterial_GetTempMaterial in github.com/zhanghup/go-wxmp" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestMaterial_GetTempMaterial_in_github_com_zhanghup_go-wxmp - 2019.12.12 at 21h 04m 19s.xml">
+      <configuration name="TestMaterial_GetTempMaterial in github.com/zhanghup/go-wxmp" configurationId="GoTestRunConfiguration" />
     </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2553305" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -217,7 +321,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.329718" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.2646421" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -225,7 +329,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="GraphQL" order="9" />
       <window_info anchor="bottom" id="Database Changes" order="10" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.329718" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.329718" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -238,6 +342,30 @@
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/context.go</url>
+          <line>94</line>
+          <properties />
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$USER_HOME$/go/pkg/mod/github.com/zhanghup/go-tools@v1.0.18/http.go</url>
+          <line>44</line>
+          <properties />
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/example/main.go</url>
+          <line>11</line>
+          <properties />
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/.gitignore">
@@ -255,23 +383,55 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jssdk.go">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/go.sum" />
     <entry file="file://D:/Go/src/mime/multipart/writer.go" />
     <entry file="file://D:/Go/src/mime/multipart/formdata.go" />
     <entry file="file://D:/Go/src/net/http/client.go" />
     <entry file="file://D:/Go/src/io/io.go" />
-    <entry file="file://$PROJECT_DIR$/context.go">
+    <entry file="file://$PROJECT_DIR$/jssdk_test.go">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://I:/go/src/mime/multipart/writer.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2204">
-          <caret line="126" column="10" selection-start-line="126" selection-start-column="10" selection-end-line="126" selection-end-column="10" />
+        <state relative-caret-position="176">
+          <caret line="139" column="17" selection-start-line="139" selection-start-column="17" selection-end-line="139" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jssdk_test.go">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://I:/go/src/net/http/client.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="748" selection-start-line="748" selection-end-line="748" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://I:/go/src/io/multi.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="47" column="5" selection-start-line="47" selection-start-column="5" selection-end-line="47" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://I:/go/src/runtime/panic.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="846" selection-start-line="846" selection-end-line="846" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/go/pkg/mod/github.com/zhanghup/go-tools@v1.0.18/http.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="33" column="16" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/material_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="456">
+          <caret line="29" selection-start-line="29" selection-end-line="29" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/context_test.go">
       <provider selected="true" editor-type-id="text-editor">
@@ -280,17 +440,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/material.go">
+    <entry file="file://$PROJECT_DIR$/jssdk.go">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/context.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="25" column="91" selection-start-line="25" selection-start-column="91" selection-end-line="25" selection-end-column="91" />
+        <state relative-caret-position="589">
+          <caret line="111" column="24" selection-start-line="111" selection-start-column="24" selection-end-line="111" selection-end-column="24" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/material_test.go">
+    <entry file="file://$PROJECT_DIR$/material.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+        <state relative-caret-position="1482">
+          <caret line="94" column="75" lean-forward="true" selection-start-line="94" selection-start-column="75" selection-end-line="94" selection-end-column="75" />
+          <folding>
+            <element signature="n#!!block;n#GetTempMaterial#0" />
+            <element signature="n#!!block;n#GetTempMaterialVideo#1" />
+            <element signature="n#!!block;n#NewTempMaterial#1" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/menu.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="4" selection-start-line="4" selection-end-line="26" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/message.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="22" column="35" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="19" column="9" lean-forward="true" selection-start-line="19" selection-start-column="9" selection-end-line="19" selection-end-column="9" />
+          <folding>
+            <element signature="e#14#49#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

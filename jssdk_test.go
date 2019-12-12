@@ -1,4 +1,4 @@
-package go_wxmp
+package wxmp
 
 import (
 	"fmt"

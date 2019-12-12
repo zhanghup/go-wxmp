@@ -1,4 +1,4 @@
-package go_wxmp
+package wxmp
 
 import (
 	"encoding/json"
@@ -95,6 +95,21 @@ func (this *context) get(url string, param map[string]interface{}, result interf
 	url = strings.Replace(this.url()+url, "ACCESS_TOKEN", token, 1)
 
 	return tools.Http().GetI(url, param, result)
+}
+
+func (this *context) getIO(url string, param map[string]interface{}) (io.Reader, error) {
+	err := this.token()
+	if err != nil {
+		return nil, err
+	}
+	token := this.cache.Get("access_token").(string)
+	url = strings.Replace(this.url()+url, "ACCESS_TOKEN", token, 1)
+
+	res, err := tools.Http().GetF(url, param)
+	if err != nil {
+		return nil, err
+	}
+	return res.Body, nil
 }
 
 func (this *context) post(url string, param, result interface{}) error {
