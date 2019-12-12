@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"mime/multipart"
-	"os"
 )
 
 type MaterialType string
@@ -24,6 +23,7 @@ func (this *context) Material() Imaterial {
 }
 
 type Imaterial interface {
+	NewTempMaterial(ty MaterialType, name string, f io.Reader) (*NewTempMaterialRes, error)
 }
 
 type material struct {
@@ -38,23 +38,32 @@ func (this *material) error(err interface{}, fn string) error {
 	return fmt.Errorf("微信公众号 - 素材管理 - %s - %s", fn, s)
 }
 
-func (this *material) NewTempMaterial(ty MaterialType, f io.Reader) error {
+type NewTempMaterialRes struct {
+	Error
+	Type      string `json:"type"`
+	MediaId   string `json:"media_id"`
+	CreatedAt int64  `json:"created_at"`
+}
+
+func (this *material) NewTempMaterial(ty MaterialType, name string, f io.Reader) (*NewTempMaterialRes, error) {
 	bodyBuf := &bytes.Buffer{}
 	bodyWriter := multipart.NewWriter(bodyBuf)
+	defer bodyWriter.Close()
 
 	//关键的一步操作
-	fileWriter, err := bodyWriter.CreateFormFile("uploadfile", f.Name())
+	fileWriter, err := bodyWriter.CreateFormFile("uploadfile", name)
 	if err != nil {
-		return this.error(err, "NewTempMaterial")
+		return nil, this.error(err, "NewTempMaterial")
 	}
 
-	multipart.
-	//iocopy
-	_, err = io.Copy(fileWriter, fh)
+	_, err = io.Copy(fileWriter, f)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	contentType := bodyWriter.FormDataContentType()
-	bodyWriter.Close()
+
+	res := new(NewTempMaterialRes)
+	err = this.context.postIO("/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type="+string(ty), contentType, bodyBuf, res)
+	return res, err
 }

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/zhanghup/go-tools"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -105,4 +106,23 @@ func (this *context) post(url string, param, result interface{}) error {
 	url = strings.Replace(url, "ACCESS_TOKEN", token, 1)
 
 	return tools.Http().PostI(this.url()+url, param, result)
+}
+
+func (this *context) postIO(url string, contentType string, param io.Reader, result interface{}) error {
+	err := this.token()
+	if err != nil {
+		return err
+	}
+	token := this.cache.Get("access_token").(string)
+	url = strings.Replace(url, "ACCESS_TOKEN", token, 1)
+
+	res, err := http.Post(this.url()+url, contentType, param)
+	if err != nil {
+		return err
+	}
+	data, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(data, result)
 }
