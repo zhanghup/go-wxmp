@@ -10,18 +10,18 @@ import (
 type Imessage interface {
 	HttpServer() func(res http.ResponseWriter, req *http.Request)
 	RegisterError(fn func(err error))
-	RegisterText(fn func(msg MsgText))
-	RegisterImage(fn func(msg MsgImage))
-	RegisterVoice(fn func(msg MsgVoice))
-	RegisterVideo(fn func(msg MsgVideo))
-	RegisterShortVideo(fn func(msg MsgShortVideo))
-	RegisterLocation(fn func(msg MsgLocation))
-	RegisterLink(fn func(msg MsgLink))
+	RegisterText(fn func(msg MsgText) interface{})
+	RegisterImage(fn func(msg MsgImage) interface{})
+	RegisterVoice(fn func(msg MsgVoice) interface{})
+	RegisterVideo(fn func(msg MsgVideo) interface{})
+	RegisterShortVideo(fn func(msg MsgShortVideo) interface{})
+	RegisterLocation(fn func(msg MsgLocation) interface{})
+	RegisterLink(fn func(msg MsgLink) interface{})
 
-	RegisterEventSubscribe(fn func(msg EventSubscribe))
-	RegisterEventUnsubscribe(fn func(msg EventUnsubscribe))
-	RegisterEventScan(fn func(msg EventScan))
-	RegisterEventLocation(fn func(msg EventLocation))
+	RegisterEventSubscribe(fn func(msg EventSubscribe) interface{})
+	RegisterEventUnsubscribe(fn func(msg EventUnsubscribe) interface{})
+	RegisterEventScan(fn func(msg EventScan) interface{})
+	RegisterEventLocation(fn func(msg EventLocation) interface{})
 }
 
 var msg *message
@@ -32,19 +32,19 @@ func (this *context) Message() Imessage {
 	}
 	msg = &message{
 		context:        this,
-		errors:         make([]func(err error), 0),
-		msgTexts:       make([]func(msg MsgText), 0),
-		msgImages:      make([]func(msg MsgImage), 0),
-		msgVoices:      make([]func(msg MsgVoice), 0),
-		msgVideos:      make([]func(msg MsgVideo), 0),
-		msgShortVideos: make([]func(msg MsgShortVideo), 0),
-		msgLocations:   make([]func(msg MsgLocation), 0),
-		msgLinks:       make([]func(msg MsgLink), 0),
+		errors:         make([]func(err error) interface{}, 0),
+		msgTexts:       make([]func(msg MsgText) interface{}, 0),
+		msgImages:      make([]func(msg MsgImage) interface{}, 0),
+		msgVoices:      make([]func(msg MsgVoice) interface{}, 0),
+		msgVideos:      make([]func(msg MsgVideo) interface{}, 0),
+		msgShortVideos: make([]func(msg MsgShortVideo) interface{}, 0),
+		msgLocations:   make([]func(msg MsgLocation) interface{}, 0),
+		msgLinks:       make([]func(msg MsgLink) interface{}, 0),
 
-		eventSubscribe:   make([]func(msg EventSubscribe), 0),
-		eventUnsubscribe: make([]func(msg EventUnsubscribe), 0),
-		eventScan:        make([]func(msg EventScan), 0),
-		eventLocation:    make([]func(msg EventLocation), 0),
+		eventSubscribe:   make([]func(msg EventSubscribe) interface{}, 0),
+		eventUnsubscribe: make([]func(msg EventUnsubscribe) interface{}, 0),
+		eventScan:        make([]func(msg EventScan) interface{}, 0),
+		eventLocation:    make([]func(msg EventLocation) interface{}, 0),
 	}
 	return msg
 }
@@ -53,18 +53,18 @@ type message struct {
 	context *context
 
 	errors         []func(err error)
-	msgTexts       []func(msg MsgText)
-	msgImages      []func(msg MsgImage)
-	msgVoices      []func(msg MsgVoice)
-	msgVideos      []func(msg MsgVideo)
-	msgShortVideos []func(msg MsgShortVideo)
-	msgLocations   []func(msg MsgLocation)
-	msgLinks       []func(msg MsgLink)
+	msgTexts       []func(msg MsgText) interface{}
+	msgImages      []func(msg MsgImage) interface{}
+	msgVoices      []func(msg MsgVoice) interface{}
+	msgVideos      []func(msg MsgVideo) interface{}
+	msgShortVideos []func(msg MsgShortVideo) interface{}
+	msgLocations   []func(msg MsgLocation) interface{}
+	msgLinks       []func(msg MsgLink) interface{}
 
-	eventSubscribe   []func(msg EventSubscribe)
-	eventUnsubscribe []func(msg EventUnsubscribe)
-	eventScan        []func(msg EventScan)
-	eventLocation    []func(msg EventLocation)
+	eventSubscribe   []func(msg EventSubscribe) interface{}
+	eventUnsubscribe []func(msg EventUnsubscribe) interface{}
+	eventScan        []func(msg EventScan) interface{}
+	eventLocation    []func(msg EventLocation) interface{}
 }
 
 func (this *message) error(err interface{}, fn string) {
@@ -82,38 +82,38 @@ func (this *message) error(err interface{}, fn string) {
 func (this *message) RegisterError(fn func(err error)) {
 	this.errors = append(this.errors, fn)
 }
-func (this *message) RegisterText(fn func(msg MsgText)) {
+func (this *message) RegisterText(fn func(msg MsgText) interface{}) {
 	this.msgTexts = append(this.msgTexts, fn)
 }
-func (this *message) RegisterImage(fn func(msg MsgImage)) {
+func (this *message) RegisterImage(fn func(msg MsgImage) interface{}) {
 	this.msgImages = append(this.msgImages, fn)
 }
-func (this *message) RegisterVoice(fn func(msg MsgVoice)) {
+func (this *message) RegisterVoice(fn func(msg MsgVoice) interface{}) {
 	this.msgVoices = append(this.msgVoices, fn)
 }
-func (this *message) RegisterVideo(fn func(msg MsgVideo)) {
+func (this *message) RegisterVideo(fn func(msg MsgVideo) interface{}) {
 	this.msgVideos = append(this.msgVideos, fn)
 }
-func (this *message) RegisterShortVideo(fn func(msg MsgShortVideo)) {
+func (this *message) RegisterShortVideo(fn func(msg MsgShortVideo) interface{}) {
 	this.msgShortVideos = append(this.msgShortVideos, fn)
 }
-func (this *message) RegisterLocation(fn func(msg MsgLocation)) {
+func (this *message) RegisterLocation(fn func(msg MsgLocation) interface{}) {
 	this.msgLocations = append(this.msgLocations, fn)
 }
-func (this *message) RegisterLink(fn func(msg MsgLink)) {
+func (this *message) RegisterLink(fn func(msg MsgLink) interface{}) {
 	this.msgLinks = append(this.msgLinks, fn)
 }
 
-func (this *message) RegisterEventSubscribe(fn func(msg EventSubscribe)) {
+func (this *message) RegisterEventSubscribe(fn func(msg EventSubscribe) interface{}) {
 	this.eventSubscribe = append(this.eventSubscribe, fn)
 }
-func (this *message) RegisterEventUnsubscribe(fn func(msg EventUnsubscribe)) {
+func (this *message) RegisterEventUnsubscribe(fn func(msg EventUnsubscribe) interface{}) {
 	this.eventUnsubscribe = append(this.eventUnsubscribe, fn)
 }
-func (this *message) RegisterEventScan(fn func(msg EventScan)) {
+func (this *message) RegisterEventScan(fn func(msg EventScan) interface{}) {
 	this.eventScan = append(this.eventScan, fn)
 }
-func (this *message) RegisterEventLocation(fn func(msg EventLocation)) {
+func (this *message) RegisterEventLocation(fn func(msg EventLocation) interface{}) {
 	this.eventLocation = append(this.eventLocation, fn)
 }
 
@@ -151,6 +151,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 			msgType := hd["MsgType"]
 			msgEvent := hd["Event"]
 
+			var response interface{}
 			switch MsgType(msgType) {
 			case MsgTypeText:
 				o := MsgText{}
@@ -159,7 +160,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err, "HttpServer_文本消息")
 				}
 				for _, f := range this.msgTexts {
-					f(o)
+					response = f(o)
 				}
 			case MsgTypeImage:
 				o := MsgImage{}
@@ -168,7 +169,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err, "HttpServer_图片消息")
 				}
 				for _, f := range this.msgImages {
-					f(o)
+					response = f(o)
 				}
 			case MsgTypeVoice:
 				o := MsgVoice{}
@@ -177,7 +178,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err, "HttpServer_语音消息")
 				}
 				for _, f := range this.msgVoices {
-					f(o)
+					response = f(o)
 				}
 			case MsgTypeVideo:
 				o := MsgVideo{}
@@ -186,7 +187,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err, "HttpServer_视频消息")
 				}
 				for _, f := range this.msgVideos {
-					f(o)
+					response = f(o)
 				}
 			case MsgTypeShortVideo:
 				o := MsgShortVideo{}
@@ -195,7 +196,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err, "HttpServer_小视频消息")
 				}
 				for _, f := range this.msgShortVideos {
-					f(o)
+					response = f(o)
 				}
 			case MsgTypeLocation:
 				o := MsgLocation{}
@@ -204,7 +205,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err, "HttpServer_地理位置消息")
 				}
 				for _, f := range this.msgLocations {
-					f(o)
+					response = f(o)
 				}
 			case MsgTypeLink:
 				o := MsgLink{}
@@ -213,7 +214,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err, "HttpServer_链接消息")
 				}
 				for _, f := range this.msgLinks {
-					f(o)
+					response = f(o)
 				}
 			case MsgTypeEvent: // 事件消息
 				switch MsgEvent(msgEvent) {
@@ -224,7 +225,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 						this.error(err, "HttpServer_链接消息")
 					}
 					for _, f := range this.eventSubscribe {
-						f(o)
+						response = f(o)
 					}
 				case MsgEventUnsubscribe: // 取消关注事件
 					o := EventUnsubscribe{}
@@ -233,7 +234,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 						this.error(err, "HttpServer_链接消息")
 					}
 					for _, f := range this.eventUnsubscribe {
-						f(o)
+						response = f(o)
 					}
 				case MsgEventScan: // 已经关注的用户扫描带参数二维码事件
 					o := EventScan{}
@@ -242,7 +243,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 						this.error(err, "HttpServer_链接消息")
 					}
 					for _, f := range this.eventScan {
-						f(o)
+						response = f(o)
 					}
 				case MsgEventLocation: // 上报地理位置事件
 					o := EventLocation{}
@@ -251,11 +252,17 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 						this.error(err, "HttpServer_链接消息")
 					}
 					for _, f := range this.eventLocation {
-						f(o)
+						response = f(o)
 					}
 				}
 			}
 
+			// 消息回复
+			if response != nil {
+
+			} else {
+				_, _ = res.Write([]byte(""))
+			}
 		}
 	}
 }
