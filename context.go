@@ -42,6 +42,9 @@ func NewContext(appid, appsecret, token string) IContext {
 }
 
 func (this *context) error(err interface{}) string {
+	if err == nil {
+		return ""
+	}
 	var s = ""
 	switch err.(type) {
 	case string:
