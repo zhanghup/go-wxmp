@@ -8,16 +8,17 @@ import (
 
 func main() {
 	http.HandleFunc("/test", func(res http.ResponseWriter, req *http.Request) {
-		if req.Method == http.MethodGet {
-			data, err := ioutil.ReadAll(req.Body)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-			fmt.Println(data)
-		} else {
+		switch req.Method {
+		case http.MethodGet:
+			values := req.URL.Query()
+			signature := values.Get("signature")
+			timestamp := values.Get("timestamp")
+			nonce := values.Get("nonce")
+			echostr := values.Get("echostr")
 
+		case http.MethodPost:
 		}
+
 
 		res.Write([]byte("helloworld"))
 	})

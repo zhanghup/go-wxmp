@@ -1,6 +1,9 @@
 package wxmp
 
 import (
+	"bufio"
+	"crypto/sha1"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -8,6 +11,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"sort"
 	"strings"
 	"time"
 )
@@ -23,14 +27,17 @@ type Error struct {
 type context struct {
 	appid     string
 	appsecret string
-	cache     tools.IMap
+	stoken    string // 这个token是配置在服务器上的token，用于数据校验
+
+	cache tools.IMap
 }
 
-func NewContext(appid, appsecret string) IContext {
+func NewContext(appid, appsecret, token string) IContext {
 	c := new(context)
 	c.cache = tools.NewCache()
 	c.appid = appid
 	c.appsecret = appsecret
+	c.stoken = token
 	return c
 }
 
@@ -140,4 +147,22 @@ func (this *context) postIO(url string, contentType string, param io.Reader, res
 		return err
 	}
 	return json.Unmarshal(data, result)
+}
+
+func (this *context) sign(timestamp, nonce, encryptedMsg, sign string) bool {
+	strs := sort.StringSlice{this.stoken, timestamp, nonce, encryptedMsg}
+	strs.Sort()
+
+	h := sha1.New()
+
+	bufw := bufio.NewWriterSize(h, 128) // sha1.BlockSize 的整数倍
+	bufw.WriteString(strs[0])
+	bufw.WriteString(strs[1])
+	bufw.WriteString(strs[2])
+	bufw.WriteString(strs[3])
+	bufw.Flush()
+
+	hashsum := h.Sum(nil)
+	return hex.EncodeToString(hashsum) == sign
+
 }
