@@ -30,8 +30,9 @@ func TestUrlEncode(t *testing.T) {
 
 func init() {
 	c = &context{
-		appid: "wx5fb1dbe2ad657632",
-		appsecret:"2265142a415434c47d334ff294798b69",
-		cache:tools.NewCache(),
+		appid:     "wx5fb1dbe2ad657632",
+		appsecret: "2265142a415434c47d334ff294798b69",
+		cache:     tools.NewCache(),
+		stoken:    "test",
 	}
 }

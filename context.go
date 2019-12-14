@@ -153,7 +153,7 @@ func (this *context) postIO(url string, contentType string, param io.Reader, res
 }
 
 func (this *context) sign(timestamp, nonce, encryptedMsg, sign string) bool {
-	strs := sort.StringSlice{this.stoken, timestamp, nonce, encryptedMsg}
+	strs := sort.StringSlice{this.stoken, timestamp, nonce}
 	strs.Sort()
 
 	h := sha1.New()
@@ -162,10 +162,10 @@ func (this *context) sign(timestamp, nonce, encryptedMsg, sign string) bool {
 	bufw.WriteString(strs[0])
 	bufw.WriteString(strs[1])
 	bufw.WriteString(strs[2])
-	bufw.WriteString(strs[3])
 	bufw.Flush()
 
 	hashsum := h.Sum(nil)
-	return hex.EncodeToString(hashsum) == sign
+	s := hex.EncodeToString(hashsum)
+	return s == sign
 
 }

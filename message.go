@@ -32,7 +32,7 @@ func (this *context) Message() Imessage {
 	}
 	msg = &message{
 		context:        this,
-		errors:         make([]func(err error) interface{}, 0),
+		errors:         make([]func(err error), 0),
 		msgTexts:       make([]func(msg MsgText) interface{}, 0),
 		msgImages:      make([]func(msg MsgImage) interface{}, 0),
 		msgVoices:      make([]func(msg MsgVoice) interface{}, 0),
@@ -134,7 +134,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 
 		switch req.Method {
 		case http.MethodGet:
-			_, _ = res.Write([]byte(nonce))
+			_, _ = res.Write([]byte(echostr))
 		case http.MethodPost:
 			data, err := ioutil.ReadAll(req.Body)
 			if err != nil {
@@ -259,6 +259,12 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 
 			// 消息回复
 			if response != nil {
+				a, err := xml.Marshal(response)
+				if err != nil {
+					this.error(err, "HttpServer_3")
+				} else {
+					_, _ = res.Write(a)
+				}
 
 			} else {
 				_, _ = res.Write([]byte(""))
