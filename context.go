@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/zhanghup/go-tools"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -17,6 +16,10 @@ import (
 )
 
 type IContext interface {
+	JSSDK() IJssdk
+	Material() Imaterial
+	Menu() Imenu
+	Message() Imessage
 }
 
 type Error struct {
