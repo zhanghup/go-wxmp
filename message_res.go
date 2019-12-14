@@ -54,7 +54,6 @@ type MsgArticleRes struct {
 
 // 图文消息
 type MsgNewsRes struct {
-	XMLName struct{} `xml:"xml" json:"-"`
 	MsgHeader
 	ArticleCount int             `xml:"ArticleCount"            json:"ArticleCount"`       // 图文消息个数, 限制为10条以内
 	Articles     []MsgArticleRes `xml:"Articles>item,omitempty" json:"Articles,omitempty"` // 多条图文消息信息, 默认第一个item为大图, 注意, 如果图文数超过10, 则将会无响应
@@ -65,7 +64,6 @@ type MsgTransferToCustomerService struct {
 	MsgHeader
 	TransInfo *MsgTransInfo `xml:"TransInfo,omitempty" json:"TransInfo,omitempty"`
 }
-
 type MsgTransInfo struct {
 	KfAccount string `xml:"KfAccount" json:"KfAccount"`
 }

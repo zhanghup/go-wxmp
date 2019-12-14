@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"reflect"
 )
 
 type Imessage interface {
@@ -117,6 +118,93 @@ func (this *message) RegisterEventLocation(fn func(msg EventLocation) interface{
 	this.eventLocation = append(this.eventLocation, fn)
 }
 
+func (this *message) xml(v interface{}) string {
+	if v == nil {
+		return ""
+	}
+	return fmt.Sprintf("<xml>%s</xml>", this.reflectInterface(reflect.TypeOf(v), reflect.ValueOf(v)))
+}
+
+func (this *message) xmlItem(wrap string, ty reflect.Type, vl reflect.Value) string {
+	switch ty.Kind() {
+	case reflect.Map:
+		return fmt.Sprintf("<%s>%s</%s>", wrap, this.reflectInterface(ty, vl), wrap)
+	case reflect.Struct:
+		return fmt.Sprintf("<%s>%s</%s>", wrap, this.reflectInterface(ty, vl), wrap)
+	case reflect.String:
+		return fmt.Sprintf("<%s><![CDATA[%s]]></%s>", wrap, vl.String(), wrap)
+	case reflect.Uint:
+		fallthrough
+	case reflect.Uint8:
+		fallthrough
+	case reflect.Uint16:
+		fallthrough
+	case reflect.Uint32:
+		fallthrough
+	case reflect.Uint64:
+		return fmt.Sprintf("<%s>%d</%s>", wrap, vl.Uint(), wrap)
+	case reflect.Int:
+		fallthrough
+	case reflect.Int8:
+		fallthrough
+	case reflect.Int16:
+		fallthrough
+	case reflect.Int32:
+		fallthrough
+	case reflect.Int64:
+		return fmt.Sprintf("<%s>%d</%s>", wrap, vl.Int(), wrap)
+	}
+	return ""
+}
+
+func (this *message) reflectInterface(t reflect.Type, v reflect.Value) string {
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
+		t = t.Elem()
+	}
+
+	result := ""
+	if v.Kind() == reflect.Struct {
+		for i := 0; i < v.NumField(); i++ {
+			vl := v.Field(i)
+			ty := t.Field(i).Type
+			field := t.Field(i)
+
+			wrap := field.Tag.Get("xml")
+			if len(wrap) == 0 {
+				wrap = field.Tag.Get("json")
+			}
+			if len(wrap) == 0 {
+				wrap = field.Name
+			}
+
+			if ty.Kind() == reflect.Ptr {
+				if vl.Pointer() == 0 {
+					result += fmt.Sprintf("<%s></%s>", wrap, wrap)
+					continue
+				}
+				vl = vl.Elem()
+				ty = ty.Elem()
+			}
+			if ty.Kind() == reflect.Struct && field.Anonymous {
+				result += this.reflectInterface(ty, vl)
+			} else {
+				result += this.xmlItem(wrap, ty, vl)
+			}
+		}
+	} else if v.Kind() == reflect.Map {
+		for _, k := range v.MapKeys() {
+			if k.Kind() != reflect.String {
+				continue
+			}
+			vl := v.MapIndex(k)
+			ty := vl.Type()
+			result += this.xmlItem(k.String(), ty, vl)
+		}
+	}
+	return result
+}
+
 func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Request) {
 	return func(res http.ResponseWriter, req *http.Request) {
 		values := req.URL.Query()
@@ -124,11 +212,11 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 		timestamp := values.Get("timestamp")
 		nonce := values.Get("nonce")
 		echostr := values.Get("echostr")
-		if len(signature) == 0 || len(timestamp) == 0 || len(nonce) == 0 || len(echostr) == 0 {
+		if len(signature) == 0 || len(timestamp) == 0 || len(nonce) == 0 {
 			return
 		}
 
-		if !this.context.sign(timestamp, nonce, echostr, signature) {
+		if !this.context.sign(timestamp, nonce, signature) {
 			return
 		}
 
@@ -141,21 +229,21 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				this.error(err, "HttpServer_0")
 				return
 			}
-			hd := map[string]string{}
-			err = xml.Unmarshal(data, hd)
+			hd := struct {
+				MsgType string `xml:"MsgType"`
+				Event   string `xml:"Event"`
+			}{}
+			err = xml.Unmarshal(data, &hd)
 			if err != nil {
 				this.error(err, "HttpServer_1")
 				return
 			}
 
-			msgType := hd["MsgType"]
-			msgEvent := hd["Event"]
-
 			var response interface{}
-			switch MsgType(msgType) {
+			switch MsgType(hd.MsgType) {
 			case MsgTypeText:
 				o := MsgText{}
-				err := xml.Unmarshal(data, o)
+				err := xml.Unmarshal(data, &o)
 				if err != nil {
 					this.error(err, "HttpServer_文本消息")
 				}
@@ -164,7 +252,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				}
 			case MsgTypeImage:
 				o := MsgImage{}
-				err := xml.Unmarshal(data, o)
+				err := xml.Unmarshal(data, &o)
 				if err != nil {
 					this.error(err, "HttpServer_图片消息")
 				}
@@ -173,7 +261,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				}
 			case MsgTypeVoice:
 				o := MsgVoice{}
-				err := xml.Unmarshal(data, o)
+				err := xml.Unmarshal(data, &o)
 				if err != nil {
 					this.error(err, "HttpServer_语音消息")
 				}
@@ -182,7 +270,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				}
 			case MsgTypeVideo:
 				o := MsgVideo{}
-				err := xml.Unmarshal(data, o)
+				err := xml.Unmarshal(data, &o)
 				if err != nil {
 					this.error(err, "HttpServer_视频消息")
 				}
@@ -191,7 +279,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				}
 			case MsgTypeShortVideo:
 				o := MsgShortVideo{}
-				err := xml.Unmarshal(data, o)
+				err := xml.Unmarshal(data, &o)
 				if err != nil {
 					this.error(err, "HttpServer_小视频消息")
 				}
@@ -200,7 +288,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				}
 			case MsgTypeLocation:
 				o := MsgLocation{}
-				err := xml.Unmarshal(data, o)
+				err := xml.Unmarshal(data, &o)
 				if err != nil {
 					this.error(err, "HttpServer_地理位置消息")
 				}
@@ -209,7 +297,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				}
 			case MsgTypeLink:
 				o := MsgLink{}
-				err := xml.Unmarshal(data, o)
+				err := xml.Unmarshal(data, &o)
 				if err != nil {
 					this.error(err, "HttpServer_链接消息")
 				}
@@ -217,10 +305,10 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					response = f(o)
 				}
 			case MsgTypeEvent: // 事件消息
-				switch MsgEvent(msgEvent) {
+				switch MsgEvent(hd.Event) {
 				case MsgEventSubscribe: // 关注事件, 包括点击关注和扫描二维码(公众号二维码和公众号带参数二维码)关注
 					o := EventSubscribe{}
-					err := xml.Unmarshal(data, o)
+					err := xml.Unmarshal(data, &o)
 					if err != nil {
 						this.error(err, "HttpServer_链接消息")
 					}
@@ -229,7 +317,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					}
 				case MsgEventUnsubscribe: // 取消关注事件
 					o := EventUnsubscribe{}
-					err := xml.Unmarshal(data, o)
+					err := xml.Unmarshal(data, &o)
 					if err != nil {
 						this.error(err, "HttpServer_链接消息")
 					}
@@ -238,7 +326,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					}
 				case MsgEventScan: // 已经关注的用户扫描带参数二维码事件
 					o := EventScan{}
-					err := xml.Unmarshal(data, o)
+					err := xml.Unmarshal(data, &o)
 					if err != nil {
 						this.error(err, "HttpServer_链接消息")
 					}
@@ -247,7 +335,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					}
 				case MsgEventLocation: // 上报地理位置事件
 					o := EventLocation{}
-					err := xml.Unmarshal(data, o)
+					err := xml.Unmarshal(data, &o)
 					if err != nil {
 						this.error(err, "HttpServer_链接消息")
 					}
@@ -258,17 +346,8 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 			}
 
 			// 消息回复
-			if response != nil {
-				a, err := xml.Marshal(response)
-				if err != nil {
-					this.error(err, "HttpServer_3")
-				} else {
-					_, _ = res.Write(a)
-				}
-
-			} else {
-				_, _ = res.Write([]byte(""))
-			}
+			rr := this.xml(response)
+			_, _ = res.Write([]byte(rr))
 		}
 	}
 }

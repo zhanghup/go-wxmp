@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"testing"
+	"time"
 )
 
 func TestMessageText(t *testing.T) {
@@ -26,6 +27,17 @@ func TestMessageText(t *testing.T) {
 }
 
 func TestMessage_HttpServer(t *testing.T) {
+	c.Message().RegisterText(func(msg MsgText) interface{} {
+		return MsgTextRes{
+			MsgHeader: MsgHeader{
+				ToUserName:   msg.FromUserName,
+				FromUserName: msg.ToUserName,
+				CreateTime:   time.Now().Unix(),
+				MsgType:      MsgTypeText,
+			},
+			Content: "hahahah",
+		}
+	})
 	http.HandleFunc("/test", c.Message().HttpServer())
 	http.ListenAndServe(":40018", nil)
 }

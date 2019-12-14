@@ -156,7 +156,7 @@ func (this *context) postIO(url string, contentType string, param io.Reader, res
 	return json.Unmarshal(data, result)
 }
 
-func (this *context) sign(timestamp, nonce, encryptedMsg, sign string) bool {
+func (this *context) sign(timestamp, nonce, sign string) bool {
 	strs := sort.StringSlice{this.stoken, timestamp, nonce}
 	strs.Sort()
 
