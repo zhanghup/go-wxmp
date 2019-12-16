@@ -11,6 +11,7 @@ import (
 type Imessage interface {
 	HttpServer() func(res http.ResponseWriter, req *http.Request)
 	RegisterError(fn func(err error))
+
 	RegisterText(fn func(msg MsgText) interface{})
 	RegisterImage(fn func(msg MsgImage) interface{})
 	RegisterVoice(fn func(msg MsgVoice) interface{})
