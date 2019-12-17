@@ -34,7 +34,7 @@ func TestTemplate_Send(t *testing.T) {
 		TemplateId: "kEdg_G8Hz3ZlowZ1HZ4GXeQZwRAlQ9t8k8l4PfeJUe0",
 		Url:        tools.Ptr().String("https://www.baidu.com"),
 		Data: TemplateData{
-			First: TemplateDataItem{
+			"first": TemplateDataItem{
 				Value: "helloworld",
 			},
 		},

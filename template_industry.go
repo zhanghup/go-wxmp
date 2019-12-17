@@ -32,13 +32,7 @@ type TemplateMiniprogram struct {
 	Appid    string `json:"appid"`
 	Pagepath string `json:"pagepath"`
 }
-type TemplateData struct {
-	First    TemplateDataItem `json:"first"`
-	Keyword1 TemplateDataItem `json:"keyword1"`
-	Keyword2 TemplateDataItem `json:"keyword2"`
-	Keyword3 TemplateDataItem `json:"keyword3"`
-	Remark   TemplateDataItem `json:"remark"`
-}
+type TemplateData map[string]TemplateDataItem
 type TemplateDataItem struct {
 	Value string `json:"value"`
 	Color string `json:"color"`

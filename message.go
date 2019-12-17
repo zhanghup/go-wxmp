@@ -24,6 +24,7 @@ type Imessage interface {
 	RegisterEventUnsubscribe(fn func(msg EventUnsubscribe) interface{})
 	RegisterEventScan(fn func(msg EventScan) interface{})
 	RegisterEventLocation(fn func(msg EventLocation) interface{})
+	RegisterEventTemplateFinish(fn func(msg EventTemplateFinish) interface{})
 }
 
 var msg *message
@@ -63,10 +64,11 @@ type message struct {
 	msgLocations   []func(msg MsgLocation) interface{}
 	msgLinks       []func(msg MsgLink) interface{}
 
-	eventSubscribe   []func(msg EventSubscribe) interface{}
-	eventUnsubscribe []func(msg EventUnsubscribe) interface{}
-	eventScan        []func(msg EventScan) interface{}
-	eventLocation    []func(msg EventLocation) interface{}
+	eventSubscribe      []func(msg EventSubscribe) interface{}
+	eventUnsubscribe    []func(msg EventUnsubscribe) interface{}
+	eventScan           []func(msg EventScan) interface{}
+	eventLocation       []func(msg EventLocation) interface{}
+	eventTemplateFinish []func(msg EventTemplateFinish) interface{}
 }
 
 func (this *message) error(err interface{}, fn string) {
@@ -118,6 +120,10 @@ func (this *message) RegisterEventScan(fn func(msg EventScan) interface{}) {
 }
 func (this *message) RegisterEventLocation(fn func(msg EventLocation) interface{}) {
 	this.eventLocation = append(this.eventLocation, fn)
+}
+
+func (this *message) RegisterEventTemplateFinish(fn func(msg EventTemplateFinish) interface{}) {
+	this.eventTemplateFinish = append(this.eventTemplateFinish, fn)
 }
 
 func (this *message) xml(v interface{}) string {
@@ -342,6 +348,15 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 						this.error(err, "HttpServer_链接消息")
 					}
 					for _, f := range this.eventLocation {
+						response = f(o)
+					}
+				case MsgEventTemplateFinish:
+					o := EventTemplateFinish{}
+					err := xml.Unmarshal(data, &o)
+					if err != nil {
+						this.error(err, "HttpServer_链接消息")
+					}
+					for _, f := range this.eventTemplateFinish {
 						response = f(o)
 					}
 				}

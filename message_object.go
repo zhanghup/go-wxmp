@@ -26,10 +26,11 @@ const (
 	MsgTypeLink       MsgType = "link"       // 链接消息
 	MsgTypeEvent      MsgType = "event"      // 事件消息
 
-	MsgEventSubscribe   MsgEvent = "subscribe"   // 关注事件, 包括点击关注和扫描二维码(公众号二维码和公众号带参数二维码)关注
-	MsgEventUnsubscribe MsgEvent = "unsubscribe" // 取消关注事件
-	MsgEventScan        MsgEvent = "SCAN"        // 已经关注的用户扫描带参数二维码事件
-	MsgEventLocation    MsgEvent = "LOCATION"    // 上报地理位置事件
+	MsgEventSubscribe      MsgEvent = "subscribe"             // 关注事件, 包括点击关注和扫描二维码(公众号二维码和公众号带参数二维码)关注
+	MsgEventUnsubscribe    MsgEvent = "unsubscribe"           // 取消关注事件
+	MsgEventScan           MsgEvent = "SCAN"                  // 已经关注的用户扫描带参数二维码事件
+	MsgEventLocation       MsgEvent = "LOCATION"              // 上报地理位置事件
+	MsgEventTemplateFinish MsgEvent = "TEMPLATESENDJOBFINISH" // 模板消息发送结束
 )
 
 // 文本消息
@@ -137,4 +138,11 @@ type EventLocation struct {
 	Latitude  float64 `xml:"Latitude"  json:"Latitude"`  // 地理位置纬度
 	Longitude float64 `xml:"Longitude" json:"Longitude"` // 地理位置经度
 	Precision float64 `xml:"Precision" json:"Precision"` // 地理位置精度(整数? 但是微信推送过来是浮点数形式)
+}
+
+// 模板消息发送反馈
+type EventTemplateFinish struct {
+	MsgHeader
+	Msgid  string `xml:"MsgId" json:"MsgId"`   // 消息id
+	Status string `xml:"Status" json:"Status"` // 发送状态为发送失败（[failed: system failed 非用户拒绝] [failed:user block 发送状态为用户拒绝接收]）
 }
