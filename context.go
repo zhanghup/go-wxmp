@@ -22,6 +22,7 @@ type IContext interface {
 	Material() Imaterial
 	Menu() Imenu
 	Message() Imessage
+	Template() ITemplate
 }
 
 type Error struct {
