@@ -11,6 +11,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"runtime"
 	"sort"
 	"strings"
 	"time"
@@ -45,9 +46,9 @@ func NewContext(appid, appsecret, token string) IContext {
 	return c
 }
 
-func (this *context) error(err interface{}) string {
+func (this *context) error(err interface{}, ty string) error {
 	if err == nil {
-		return ""
+		return nil
 	}
 	var s = ""
 	switch err.(type) {
@@ -58,11 +59,29 @@ func (this *context) error(err interface{}) string {
 	case Error:
 		e := err.(Error)
 		if e.Errcode == 0 {
-			return ""
+			return nil
 		}
-		s = fmt.Sprintf("%d: %s", e.Errcode, e.Errmsg)
+		s = fmt.Sprintf("%d %s", e.Errcode, e.Errmsg)
 	}
-	return s
+
+	pc, file, line, _ := runtime.Caller(2)
+
+	// 文件名
+	st := strings.LastIndex(file, "/")
+	end := strings.LastIndex(file, ".")
+	if end > st && st > 0 {
+		file = file[st+1 : end]
+	}
+
+	// 方法名
+	f := runtime.FuncForPC(pc)
+	fname := f.Name()
+	i := strings.LastIndex(fname, ".")
+	if i > -1 {
+		fname = fname[i+1:]
+	}
+
+	return fmt.Errorf("微信公众号 - %s - %s.%s - %d - Error:%s", ty, file, fname, line, s)
 }
 
 func (this *context) token() error {

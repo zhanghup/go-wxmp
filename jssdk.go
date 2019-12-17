@@ -35,11 +35,7 @@ type jssdk struct {
 }
 
 func (this *jssdk) error(err interface{}, fn string) error {
-	s := this.context.error(err)
-	if len(s) == 0 {
-		return nil
-	}
-	return fmt.Errorf("微信公众号 - 网页开发 - %s - %s", fn, s)
+	return this.context.error(err, "网页开发")
 }
 
 func (this *jssdk) Auth(code string) (string, string, error) {

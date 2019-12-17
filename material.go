@@ -2,7 +2,6 @@ package wxmp
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"mime/multipart"
 )
@@ -33,11 +32,7 @@ type material struct {
 }
 
 func (this *material) error(err interface{}, fn string) error {
-	s := this.context.error(err)
-	if len(s) == 0 {
-		return nil
-	}
-	return fmt.Errorf("微信公众号 - 素材管理 - %s - %s", fn, s)
+	return this.context.error(err, "素材管理")
 }
 
 type NewTempMaterialRes struct {
@@ -105,7 +100,6 @@ func (this *material) GetTempMaterialVioce(mediaId string) (string, error) {
 	return data.VideoUrl, this.error(err, "GetTempMaterial_1")
 }
 
-
 // 获取临时素材（即下载临时的多媒体文件）
 func (this *material) GetTempMaterial(mediaId string) (io.Reader, error) {
 	res, err := this.context.getIO("/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id="+mediaId, nil)
@@ -114,7 +108,6 @@ func (this *material) GetTempMaterial(mediaId string) (io.Reader, error) {
 	}
 	return res, nil
 }
-
 
 // 新增永久素材
 func (this *material) NewMaterial(ty MaterialType, name string, f io.Reader) (*NewTempMaterialRes, error) {

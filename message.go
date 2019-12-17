@@ -70,13 +70,14 @@ type message struct {
 }
 
 func (this *message) error(err interface{}, fn string) {
-	s := this.context.error(err)
-	if len(s) == 0 {
+	s := this.context.error(err, "消息管理")
+	if s == nil {
 		return
 	}
+
 	if len(this.errors) > 0 {
 		for _, f := range this.errors {
-			f(fmt.Errorf("微信公众号 - 消息管理 - %s - %s", fn, s))
+			f(s)
 		}
 	}
 }
