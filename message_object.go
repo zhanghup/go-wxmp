@@ -16,12 +16,12 @@ type MsgHeader struct {
 	MsgType      MsgType `xml:"MsgType"      json:"MsgType"`
 }
 
-func (this MsgHeader) Response() MsgHeader {
+func (this MsgHeader) Response(msgType MsgType) MsgHeader {
 	return MsgHeader{
 		ToUserName:   this.FromUserName,
 		FromUserName: this.ToUserName,
 		CreateTime:   time.Now().Unix(),
-		MsgType:      this.MsgType,
+		MsgType:      msgType,
 	}
 }
 
