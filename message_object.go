@@ -3,6 +3,7 @@ package wxmp
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 type MsgType string
@@ -13,6 +14,15 @@ type MsgHeader struct {
 	FromUserName string  `xml:"FromUserName" json:"FromUserName"`
 	CreateTime   int64   `xml:"CreateTime"   json:"CreateTime"`
 	MsgType      MsgType `xml:"MsgType"      json:"MsgType"`
+}
+
+func (this MsgHeader) Response() MsgHeader {
+	return MsgHeader{
+		ToUserName:   this.FromUserName,
+		FromUserName: this.ToUserName,
+		CreateTime:   time.Now().Unix(),
+		MsgType:      this.MsgType,
+	}
 }
 
 const (
