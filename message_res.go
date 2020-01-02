@@ -1,9 +1,21 @@
 package wxmp
 
+import "time"
+
 // 文本消息
 type MsgTextRes struct {
 	MsgHeader
 	Content string `xml:"Content" json:"Content"` // 回复的消息内容(换行: 在content中能够换行, 微信客户端支持换行显示)
+}
+
+func (this MsgTextRes) Info() MsgTextRes {
+	this.MsgHeader = MsgHeader{
+		ToUserName:   this.FromUserName,
+		FromUserName: this.ToUserName,
+		CreateTime:   time.Now().Unix(),
+		MsgType:      MsgTypeText,
+	}
+	return this
 }
 
 // 图片消息
@@ -13,6 +25,15 @@ type MsgImageRes struct {
 		MediaId string `xml:"MediaId" json:"MediaId"` // 通过素材管理接口上传多媒体文件得到 MediaId
 	} `xml:"Image" json:"Image"`
 }
+func (this MsgImageRes) Info() MsgImageRes {
+	this.MsgHeader = MsgHeader{
+		ToUserName:   this.FromUserName,
+		FromUserName: this.ToUserName,
+		CreateTime:   time.Now().Unix(),
+		MsgType:      MsgTypeImage,
+	}
+	return this
+}
 
 // 语音消息
 type MsgVoiceRes struct {
@@ -20,6 +41,15 @@ type MsgVoiceRes struct {
 	Voice struct {
 		MediaId string `xml:"MediaId" json:"MediaId"` // 通过素材管理接口上传多媒体文件得到 MediaId
 	} `xml:"Voice" json:"Voice"`
+}
+func (this MsgVoiceRes) Info() MsgVoiceRes {
+	this.MsgHeader = MsgHeader{
+		ToUserName:   this.FromUserName,
+		FromUserName: this.ToUserName,
+		CreateTime:   time.Now().Unix(),
+		MsgType:      MsgTypeVoice,
+	}
+	return this
 }
 
 // 视频消息
@@ -30,6 +60,15 @@ type MsgVideoRes struct {
 		Title       string `xml:"Title,omitempty"       json:"Title,omitempty"`       // 视频消息的标题, 可以为空
 		Description string `xml:"Description,omitempty" json:"Description,omitempty"` // 视频消息的描述, 可以为空
 	} `xml:"Video" json:"Video"`
+}
+func (this MsgVideoRes) Info() MsgVideoRes {
+	this.MsgHeader = MsgHeader{
+		ToUserName:   this.FromUserName,
+		FromUserName: this.ToUserName,
+		CreateTime:   time.Now().Unix(),
+		MsgType:      MsgTypeVideo,
+	}
+	return this
 }
 
 // 音乐消息
