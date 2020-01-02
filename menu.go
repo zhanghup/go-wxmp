@@ -21,7 +21,7 @@ type menu struct {
 	context *context
 }
 
-func (this *menu) error(err interface{}, fn string) error {
+func (this *menu) error(err interface{}) error {
 	return this.context.error(err, "自定义菜单")
 }
 
@@ -43,18 +43,18 @@ func (this *menu) Create(btns []Button) error {
 		"button": btns,
 	}, &result)
 	if err != nil {
-		return this.error(err, "Create_0")
+		return this.error(err)
 	}
-	return this.error(result, "Create_1")
+	return this.error(result)
 }
 
 func (this *menu) Delete() error {
 	result := Error{}
 	err := this.context.get("/cgi-bin/menu/delete?access_token=ACCESS_TOKEN", nil, &result)
 	if err != nil {
-		return this.error(err, "Delete_0")
+		return this.error(err)
 	}
-	return this.error(result, "Delete_1")
+	return this.error(result)
 }
 
 func (this *menu) Get() ([]Button, error) {
@@ -86,10 +86,10 @@ func (this *menu) Get() ([]Button, error) {
 	}{}
 	err := this.context.get("/cgi-bin/get_current_selfmenu_info?access_token=ACCESS_TOKEN", nil, &data)
 	if err != nil {
-		return nil, this.error(err, "Get_0")
+		return nil, this.error(err)
 	}
 
-	err = this.error(data.Error, "Get_1")
+	err = this.error(data.Error)
 	if err != nil {
 		return nil, err
 	}

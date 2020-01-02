@@ -31,7 +31,7 @@ type material struct {
 	context *context
 }
 
-func (this *material) error(err interface{}, fn string) error {
+func (this *material) error(err interface{}) error {
 	return this.context.error(err, "素材管理")
 }
 
@@ -51,25 +51,25 @@ func (this *material) NewTempMaterial(ty MaterialType, name string, f io.Reader)
 
 	formFile, err := writer.CreateFormFile("media", name)
 	if err != nil {
-		return nil, this.error(err, "NewTempMaterial_0")
+		return nil, this.error(err)
 	}
 
 	_, err = io.Copy(formFile, f)
 	if err != nil {
-		return nil, this.error(err, "NewTempMaterial_1")
+		return nil, this.error(err)
 	}
 
 	err = writer.Close()
 	if err != nil {
-		return nil, this.error(err, "NewTempMaterial_2")
+		return nil, this.error(err)
 	}
 
 	res := new(NewTempMaterialRes)
 	err = this.context.postIO("/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type="+string(ty), writer.FormDataContentType(), body, res)
 	if err != nil {
-		return nil, this.error(err, "NewTempMaterial_3")
+		return nil, this.error(err)
 	}
-	return res, this.error(res.Error, "NewTempMaterial_4")
+	return res, this.error(res.Error)
 }
 
 // 获取临时素材（即下载临时的多媒体文件） - 视频文件
@@ -81,9 +81,9 @@ func (this *material) GetTempMaterialVideo(mediaId string) (string, error) {
 
 	err := this.context.get("/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id="+mediaId, nil, &data)
 	if err != nil {
-		return "", this.error(err, "GetTempMaterial_0")
+		return "", this.error(err)
 	}
-	return data.VideoUrl, this.error(err, "GetTempMaterial_1")
+	return data.VideoUrl, this.error(err)
 }
 
 // 获取临时素材（即下载临时的多媒体文件） - 视频文件
@@ -95,16 +95,16 @@ func (this *material) GetTempMaterialVioce(mediaId string) (string, error) {
 
 	err := this.context.get("/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id="+mediaId, nil, &data)
 	if err != nil {
-		return "", this.error(err, "GetTempMaterial_0")
+		return "", this.error(err)
 	}
-	return data.VideoUrl, this.error(err, "GetTempMaterial_1")
+	return data.VideoUrl, this.error(err)
 }
 
 // 获取临时素材（即下载临时的多媒体文件）
 func (this *material) GetTempMaterial(mediaId string) (io.Reader, error) {
 	res, err := this.context.getIO("/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id="+mediaId, nil)
 	if err != nil {
-		return nil, this.error(err, "GetTempMaterial_0")
+		return nil, this.error(err)
 	}
 	return res, nil
 }
@@ -118,23 +118,23 @@ func (this *material) NewMaterial(ty MaterialType, name string, f io.Reader) (*N
 
 	formFile, err := writer.CreateFormFile("media", name)
 	if err != nil {
-		return nil, this.error(err, "NewTempMaterial_0")
+		return nil, this.error(err)
 	}
 
 	_, err = io.Copy(formFile, f)
 	if err != nil {
-		return nil, this.error(err, "NewTempMaterial_1")
+		return nil, this.error(err)
 	}
 
 	err = writer.Close()
 	if err != nil {
-		return nil, this.error(err, "NewTempMaterial_2")
+		return nil, this.error(err)
 	}
 
 	res := new(NewTempMaterialRes)
 	err = this.context.postIO("/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type="+string(ty), writer.FormDataContentType(), body, res)
 	if err != nil {
-		return nil, this.error(err, "NewTempMaterial_3")
+		return nil, this.error(err)
 	}
-	return res, this.error(res.Error, "NewTempMaterial_4")
+	return res, this.error(res.Error)
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func TestMaterial_NewTempMaterial(t *testing.T) {
-	f, err := os.Open(`C:\Users\Administrator\Desktop\资源\图片\下载.jpg`)
+	f, err := os.Open(`C:\Users\Administrator\Desktop\图片s\img\2.jpg`)
 	if err != nil {
 		panic(err)
 	}

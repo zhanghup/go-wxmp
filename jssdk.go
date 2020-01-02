@@ -34,7 +34,7 @@ type jssdk struct {
 	context *context
 }
 
-func (this *jssdk) error(err interface{}, fn string) error {
+func (this *jssdk) error(err interface{}) error {
 	return this.context.error(err, "网页开发")
 }
 
@@ -53,10 +53,10 @@ func (this *jssdk) Auth(code string) (string, string, error) {
 	}, &tok)
 
 	if err != nil {
-		return "", "", this.error(err, "Auth_0")
+		return "", "", this.error(err)
 	}
 
-	return tok.Openid, tok.AccessToken, this.error(tok.Error, "Auth_1")
+	return tok.Openid, tok.AccessToken, this.error(tok.Error)
 }
 func (this *jssdk) AuthUserInfo(code string) (*UserInfo, error) {
 	r := struct {
@@ -75,10 +75,10 @@ func (this *jssdk) AuthUserInfo(code string) (*UserInfo, error) {
 	}, &r)
 
 	if err != nil {
-		return nil, this.error(err, "AuthUserInfo_0")
+		return nil, this.error(err)
 	}
 
-	return r.UserInfo, this.error(r.Error, "AuthUserInfo_1")
+	return r.UserInfo, this.error(r.Error)
 
 }
 
@@ -86,7 +86,7 @@ func (this *jssdk) AuthUrl(uri, scope, state string) (string, error) {
 	uri = url.QueryEscape(uri)
 
 	if !tools.Str().StrContains([]string{"snsapi_base", "snsapi_userinfo"}, scope) {
-		return "", this.error("授权类型错误，应为“snsapi_base” 或者 “snsapi_userinfo”", "AuthUrl")
+		return "", this.error("授权类型错误，应为“snsapi_base” 或者 “snsapi_userinfo”")
 	}
 
 	return fmt.Sprintf("https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect", this.context.appid, uri, scope, state), nil

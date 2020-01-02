@@ -71,7 +71,7 @@ type message struct {
 	eventTemplateFinish []func(msg EventTemplateFinish) interface{}
 }
 
-func (this *message) error(err interface{}, fn string) {
+func (this *message) error(err interface{}) {
 	s := this.context.error(err, "消息管理")
 	if s == nil {
 		return
@@ -234,7 +234,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 		case http.MethodPost:
 			data, err := ioutil.ReadAll(req.Body)
 			if err != nil {
-				this.error(err, "HttpServer_0")
+				this.error(err)
 				return
 			}
 			hd := struct {
@@ -243,7 +243,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 			}{}
 			err = xml.Unmarshal(data, &hd)
 			if err != nil {
-				this.error(err, "HttpServer_1")
+				this.error(err)
 				return
 			}
 
@@ -253,7 +253,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				o := MsgText{}
 				err := xml.Unmarshal(data, &o)
 				if err != nil {
-					this.error(err, "HttpServer_文本消息")
+					this.error(err)
 				}
 				for _, f := range this.msgTexts {
 					response = f(o)
@@ -262,7 +262,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				o := MsgImage{}
 				err := xml.Unmarshal(data, &o)
 				if err != nil {
-					this.error(err, "HttpServer_图片消息")
+					this.error(err)
 				}
 				for _, f := range this.msgImages {
 					response = f(o)
@@ -271,7 +271,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				o := MsgVoice{}
 				err := xml.Unmarshal(data, &o)
 				if err != nil {
-					this.error(err, "HttpServer_语音消息")
+					this.error(err)
 				}
 				for _, f := range this.msgVoices {
 					response = f(o)
@@ -280,7 +280,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				o := MsgVideo{}
 				err := xml.Unmarshal(data, &o)
 				if err != nil {
-					this.error(err, "HttpServer_视频消息")
+					this.error(err)
 				}
 				for _, f := range this.msgVideos {
 					response = f(o)
@@ -289,7 +289,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				o := MsgShortVideo{}
 				err := xml.Unmarshal(data, &o)
 				if err != nil {
-					this.error(err, "HttpServer_小视频消息")
+					this.error(err)
 				}
 				for _, f := range this.msgShortVideos {
 					response = f(o)
@@ -298,7 +298,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				o := MsgLocation{}
 				err := xml.Unmarshal(data, &o)
 				if err != nil {
-					this.error(err, "HttpServer_地理位置消息")
+					this.error(err)
 				}
 				for _, f := range this.msgLocations {
 					response = f(o)
@@ -307,7 +307,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				o := MsgLink{}
 				err := xml.Unmarshal(data, &o)
 				if err != nil {
-					this.error(err, "HttpServer_链接消息")
+					this.error(err)
 				}
 				for _, f := range this.msgLinks {
 					response = f(o)
@@ -318,7 +318,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					o := EventSubscribe{}
 					err := xml.Unmarshal(data, &o)
 					if err != nil {
-						this.error(err, "HttpServer_链接消息")
+						this.error(err)
 					}
 					for _, f := range this.eventSubscribe {
 						response = f(o)
@@ -327,7 +327,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					o := EventUnsubscribe{}
 					err := xml.Unmarshal(data, &o)
 					if err != nil {
-						this.error(err, "HttpServer_链接消息")
+						this.error(err)
 					}
 					for _, f := range this.eventUnsubscribe {
 						response = f(o)
@@ -336,7 +336,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					o := EventScan{}
 					err := xml.Unmarshal(data, &o)
 					if err != nil {
-						this.error(err, "HttpServer_链接消息")
+						this.error(err)
 					}
 					for _, f := range this.eventScan {
 						response = f(o)
@@ -345,7 +345,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					o := EventLocation{}
 					err := xml.Unmarshal(data, &o)
 					if err != nil {
-						this.error(err, "HttpServer_链接消息")
+						this.error(err)
 					}
 					for _, f := range this.eventLocation {
 						response = f(o)
@@ -354,7 +354,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					o := EventTemplateFinish{}
 					err := xml.Unmarshal(data, &o)
 					if err != nil {
-						this.error(err, "HttpServer_链接消息")
+						this.error(err)
 					}
 					for _, f := range this.eventTemplateFinish {
 						response = f(o)
