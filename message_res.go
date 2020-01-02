@@ -25,6 +25,7 @@ type MsgImageRes struct {
 		MediaId string `xml:"MediaId" json:"MediaId"` // 通过素材管理接口上传多媒体文件得到 MediaId
 	} `xml:"Image" json:"Image"`
 }
+
 func (this MsgImageRes) Info() MsgImageRes {
 	this.MsgHeader = MsgHeader{
 		ToUserName:   this.FromUserName,
@@ -42,6 +43,7 @@ type MsgVoiceRes struct {
 		MediaId string `xml:"MediaId" json:"MediaId"` // 通过素材管理接口上传多媒体文件得到 MediaId
 	} `xml:"Voice" json:"Voice"`
 }
+
 func (this MsgVoiceRes) Info() MsgVoiceRes {
 	this.MsgHeader = MsgHeader{
 		ToUserName:   this.FromUserName,
@@ -61,6 +63,7 @@ type MsgVideoRes struct {
 		Description string `xml:"Description,omitempty" json:"Description,omitempty"` // 视频消息的描述, 可以为空
 	} `xml:"Video" json:"Video"`
 }
+
 func (this MsgVideoRes) Info() MsgVideoRes {
 	this.MsgHeader = MsgHeader{
 		ToUserName:   this.FromUserName,
@@ -83,6 +86,7 @@ type MsgMusicRes struct {
 	} `xml:"Music" json:"Music"`
 }
 
+// 图文消息
 // 图文消息里的 Article
 type MsgArticleRes struct {
 	Title       string `xml:"Title,omitempty"       json:"Title,omitempty"`       // 图文消息标题
@@ -90,8 +94,6 @@ type MsgArticleRes struct {
 	PicURL      string `xml:"PicUrl,omitempty"      json:"PicUrl,omitempty"`      // 图片链接, 支持JPG, PNG格式, 较好的效果为大图360*200, 小图200*200
 	URL         string `xml:"Url,omitempty"         json:"Url,omitempty"`         // 点击图文消息跳转链接
 }
-
-// 图文消息
 type MsgNewsRes struct {
 	MsgHeader
 	ArticleCount int             `xml:"ArticleCount"            json:"ArticleCount"`       // 图文消息个数, 限制为10条以内
