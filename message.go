@@ -375,6 +375,8 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 
 			if msgCtx != nil {
 				this.MsgContextUpdate(hd.FromUserName, msgCtx)
+			}else{
+				this.ctx.Remove(hd.FromUserName)
 			}
 
 			// 消息回复
