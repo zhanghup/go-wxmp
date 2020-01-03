@@ -1,30 +1,34 @@
 package wxmp
 
 import (
+	ctx "context"
 	"encoding/xml"
 	"fmt"
+	"github.com/zhanghup/go-tools"
 	"io/ioutil"
 	"net/http"
 	"reflect"
+	"time"
 )
 
 type Imessage interface {
 	HttpServer() func(res http.ResponseWriter, req *http.Request)
+	ContextTimeout(t int64) Imessage
 	RegisterError(fn func(err error))
 
-	RegisterText(fn func(msg MsgText) interface{})
-	RegisterImage(fn func(msg MsgImage) interface{})
-	RegisterVoice(fn func(msg MsgVoice) interface{})
-	RegisterVideo(fn func(msg MsgVideo) interface{})
-	RegisterShortVideo(fn func(msg MsgShortVideo) interface{})
-	RegisterLocation(fn func(msg MsgLocation) interface{})
-	RegisterLink(fn func(msg MsgLink) interface{})
+	RegisterText(fn func(ctx ctx.Context, msg MsgText) (ctx.Context, interface{}))
+	RegisterImage(fn func(ctx ctx.Context, msg MsgImage) (ctx.Context, interface{}))
+	RegisterVoice(fn func(ctx ctx.Context, msg MsgVoice) (ctx.Context, interface{}))
+	RegisterVideo(fn func(ctx ctx.Context, msg MsgVideo) (ctx.Context, interface{}))
+	RegisterShortVideo(fn func(ctx ctx.Context, msg MsgShortVideo) (ctx.Context, interface{}))
+	RegisterLocation(fn func(ctx ctx.Context, msg MsgLocation) (ctx.Context, interface{}))
+	RegisterLink(fn func(ctx ctx.Context, msg MsgLink) (ctx.Context, interface{}))
 
-	RegisterEventSubscribe(fn func(msg EventSubscribe) interface{})
-	RegisterEventUnsubscribe(fn func(msg EventUnsubscribe) interface{})
-	RegisterEventScan(fn func(msg EventScan) interface{})
-	RegisterEventLocation(fn func(msg EventLocation) interface{})
-	RegisterEventTemplateFinish(fn func(msg EventTemplateFinish) interface{})
+	RegisterEventSubscribe(fn func(ctx ctx.Context, msg EventSubscribe) (ctx.Context, interface{}))
+	RegisterEventUnsubscribe(fn func(ctx ctx.Context, msg EventUnsubscribe) (ctx.Context, interface{}))
+	RegisterEventScan(fn func(ctx ctx.Context, msg EventScan) (ctx.Context, interface{}))
+	RegisterEventLocation(fn func(ctx ctx.Context, msg EventLocation) (ctx.Context, interface{}))
+	RegisterEventTemplateFinish(fn func(ctx ctx.Context, msg EventTemplateFinish) (ctx.Context, interface{}))
 }
 
 var msg *message
@@ -35,40 +39,44 @@ func (this *context) Message() Imessage {
 	}
 	msg = &message{
 		context:        this,
+		ctx:            tools.NewCache(),
+		ctxTimeout:     600,
 		errors:         make([]func(err error), 0),
-		msgTexts:       make([]func(msg MsgText) interface{}, 0),
-		msgImages:      make([]func(msg MsgImage) interface{}, 0),
-		msgVoices:      make([]func(msg MsgVoice) interface{}, 0),
-		msgVideos:      make([]func(msg MsgVideo) interface{}, 0),
-		msgShortVideos: make([]func(msg MsgShortVideo) interface{}, 0),
-		msgLocations:   make([]func(msg MsgLocation) interface{}, 0),
-		msgLinks:       make([]func(msg MsgLink) interface{}, 0),
+		msgTexts:       make([]func(ctx ctx.Context, msg MsgText) (ctx.Context, interface{}), 0),
+		msgImages:      make([]func(ctx ctx.Context, msg MsgImage) (ctx.Context, interface{}), 0),
+		msgVoices:      make([]func(ctx ctx.Context, msg MsgVoice) (ctx.Context, interface{}), 0),
+		msgVideos:      make([]func(ctx ctx.Context, msg MsgVideo) (ctx.Context, interface{}), 0),
+		msgShortVideos: make([]func(ctx ctx.Context, msg MsgShortVideo) (ctx.Context, interface{}), 0),
+		msgLocations:   make([]func(ctx ctx.Context, msg MsgLocation) (ctx.Context, interface{}), 0),
+		msgLinks:       make([]func(ctx ctx.Context, msg MsgLink) (ctx.Context, interface{}), 0),
 
-		eventSubscribe:   make([]func(msg EventSubscribe) interface{}, 0),
-		eventUnsubscribe: make([]func(msg EventUnsubscribe) interface{}, 0),
-		eventScan:        make([]func(msg EventScan) interface{}, 0),
-		eventLocation:    make([]func(msg EventLocation) interface{}, 0),
+		eventSubscribe:   make([]func(ctx ctx.Context, msg EventSubscribe) (ctx.Context, interface{}), 0),
+		eventUnsubscribe: make([]func(ctx ctx.Context, msg EventUnsubscribe) (ctx.Context, interface{}), 0),
+		eventScan:        make([]func(ctx ctx.Context, msg EventScan) (ctx.Context, interface{}), 0),
+		eventLocation:    make([]func(ctx ctx.Context, msg EventLocation) (ctx.Context, interface{}), 0),
 	}
 	return msg
 }
 
 type message struct {
-	context *context
+	context    *context
+	ctx        tools.IMap
+	ctxTimeout int64
 
 	errors         []func(err error)
-	msgTexts       []func(msg MsgText) interface{}
-	msgImages      []func(msg MsgImage) interface{}
-	msgVoices      []func(msg MsgVoice) interface{}
-	msgVideos      []func(msg MsgVideo) interface{}
-	msgShortVideos []func(msg MsgShortVideo) interface{}
-	msgLocations   []func(msg MsgLocation) interface{}
-	msgLinks       []func(msg MsgLink) interface{}
+	msgTexts       []func(ctx ctx.Context, msg MsgText) (ctx.Context, interface{})
+	msgImages      []func(ctx ctx.Context, msg MsgImage) (ctx.Context, interface{})
+	msgVoices      []func(ctx ctx.Context, msg MsgVoice) (ctx.Context, interface{})
+	msgVideos      []func(ctx ctx.Context, msg MsgVideo) (ctx.Context, interface{})
+	msgShortVideos []func(ctx ctx.Context, msg MsgShortVideo) (ctx.Context, interface{})
+	msgLocations   []func(ctx ctx.Context, msg MsgLocation) (ctx.Context, interface{})
+	msgLinks       []func(ctx ctx.Context, msg MsgLink) (ctx.Context, interface{})
 
-	eventSubscribe      []func(msg EventSubscribe) interface{}
-	eventUnsubscribe    []func(msg EventUnsubscribe) interface{}
-	eventScan           []func(msg EventScan) interface{}
-	eventLocation       []func(msg EventLocation) interface{}
-	eventTemplateFinish []func(msg EventTemplateFinish) interface{}
+	eventSubscribe      []func(ctx ctx.Context, msg EventSubscribe) (ctx.Context, interface{})
+	eventUnsubscribe    []func(ctx ctx.Context, msg EventUnsubscribe) (ctx.Context, interface{})
+	eventScan           []func(ctx ctx.Context, msg EventScan) (ctx.Context, interface{})
+	eventLocation       []func(ctx ctx.Context, msg EventLocation) (ctx.Context, interface{})
+	eventTemplateFinish []func(ctx ctx.Context, msg EventTemplateFinish) (ctx.Context, interface{})
 }
 
 func (this *message) error(err interface{}) {
@@ -87,42 +95,42 @@ func (this *message) error(err interface{}) {
 func (this *message) RegisterError(fn func(err error)) {
 	this.errors = append(this.errors, fn)
 }
-func (this *message) RegisterText(fn func(msg MsgText) interface{}) {
+func (this *message) RegisterText(fn func(ctx ctx.Context, msg MsgText) (ctx.Context, interface{})) {
 	this.msgTexts = append(this.msgTexts, fn)
 }
-func (this *message) RegisterImage(fn func(msg MsgImage) interface{}) {
+func (this *message) RegisterImage(fn func(ctx ctx.Context, msg MsgImage) (ctx.Context, interface{})) {
 	this.msgImages = append(this.msgImages, fn)
 }
-func (this *message) RegisterVoice(fn func(msg MsgVoice) interface{}) {
+func (this *message) RegisterVoice(fn func(ctx ctx.Context, msg MsgVoice) (ctx.Context, interface{})) {
 	this.msgVoices = append(this.msgVoices, fn)
 }
-func (this *message) RegisterVideo(fn func(msg MsgVideo) interface{}) {
+func (this *message) RegisterVideo(fn func(ctx ctx.Context, msg MsgVideo) (ctx.Context, interface{})) {
 	this.msgVideos = append(this.msgVideos, fn)
 }
-func (this *message) RegisterShortVideo(fn func(msg MsgShortVideo) interface{}) {
+func (this *message) RegisterShortVideo(fn func(ctx ctx.Context, msg MsgShortVideo) (ctx.Context, interface{})) {
 	this.msgShortVideos = append(this.msgShortVideos, fn)
 }
-func (this *message) RegisterLocation(fn func(msg MsgLocation) interface{}) {
+func (this *message) RegisterLocation(fn func(ctx ctx.Context, msg MsgLocation) (ctx.Context, interface{})) {
 	this.msgLocations = append(this.msgLocations, fn)
 }
-func (this *message) RegisterLink(fn func(msg MsgLink) interface{}) {
+func (this *message) RegisterLink(fn func(ctx ctx.Context, msg MsgLink) (ctx.Context, interface{})) {
 	this.msgLinks = append(this.msgLinks, fn)
 }
 
-func (this *message) RegisterEventSubscribe(fn func(msg EventSubscribe) interface{}) {
+func (this *message) RegisterEventSubscribe(fn func(ctx ctx.Context, msg EventSubscribe) (ctx.Context, interface{})) {
 	this.eventSubscribe = append(this.eventSubscribe, fn)
 }
-func (this *message) RegisterEventUnsubscribe(fn func(msg EventUnsubscribe) interface{}) {
+func (this *message) RegisterEventUnsubscribe(fn func(ctx ctx.Context, msg EventUnsubscribe) (ctx.Context, interface{})) {
 	this.eventUnsubscribe = append(this.eventUnsubscribe, fn)
 }
-func (this *message) RegisterEventScan(fn func(msg EventScan) interface{}) {
+func (this *message) RegisterEventScan(fn func(ctx ctx.Context, msg EventScan) (ctx.Context, interface{})) {
 	this.eventScan = append(this.eventScan, fn)
 }
-func (this *message) RegisterEventLocation(fn func(msg EventLocation) interface{}) {
+func (this *message) RegisterEventLocation(fn func(ctx ctx.Context, msg EventLocation) (ctx.Context, interface{})) {
 	this.eventLocation = append(this.eventLocation, fn)
 }
 
-func (this *message) RegisterEventTemplateFinish(fn func(msg EventTemplateFinish) interface{}) {
+func (this *message) RegisterEventTemplateFinish(fn func(ctx ctx.Context, msg EventTemplateFinish) (ctx.Context, interface{})) {
 	this.eventTemplateFinish = append(this.eventTemplateFinish, fn)
 }
 
@@ -238,6 +246,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				return
 			}
 			hd := struct {
+				MsgHeader
 				MsgType string `xml:"MsgType"`
 				Event   string `xml:"Event"`
 			}{}
@@ -246,6 +255,8 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 				this.error(err)
 				return
 			}
+
+			msgCtx := this.MsgContext(hd.FromUserName)
 
 			var response interface{}
 			switch MsgType(hd.MsgType) {
@@ -256,7 +267,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err)
 				}
 				for _, f := range this.msgTexts {
-					response = f(o)
+					msgCtx, response = f(msgCtx, o)
 				}
 			case MsgTypeImage:
 				o := MsgImage{}
@@ -265,7 +276,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err)
 				}
 				for _, f := range this.msgImages {
-					response = f(o)
+					msgCtx, response = f(msgCtx, o)
 				}
 			case MsgTypeVoice:
 				o := MsgVoice{}
@@ -274,7 +285,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err)
 				}
 				for _, f := range this.msgVoices {
-					response = f(o)
+					msgCtx, response = f(msgCtx, o)
 				}
 			case MsgTypeVideo:
 				o := MsgVideo{}
@@ -283,7 +294,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err)
 				}
 				for _, f := range this.msgVideos {
-					response = f(o)
+					msgCtx, response = f(msgCtx, o)
 				}
 			case MsgTypeShortVideo:
 				o := MsgShortVideo{}
@@ -292,7 +303,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err)
 				}
 				for _, f := range this.msgShortVideos {
-					response = f(o)
+					msgCtx, response = f(msgCtx, o)
 				}
 			case MsgTypeLocation:
 				o := MsgLocation{}
@@ -301,7 +312,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err)
 				}
 				for _, f := range this.msgLocations {
-					response = f(o)
+					msgCtx, response = f(msgCtx, o)
 				}
 			case MsgTypeLink:
 				o := MsgLink{}
@@ -310,7 +321,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 					this.error(err)
 				}
 				for _, f := range this.msgLinks {
-					response = f(o)
+					msgCtx, response = f(msgCtx, o)
 				}
 			case MsgTypeEvent: // 事件消息
 				switch MsgEvent(hd.Event) {
@@ -321,7 +332,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 						this.error(err)
 					}
 					for _, f := range this.eventSubscribe {
-						response = f(o)
+						msgCtx, response = f(msgCtx, o)
 					}
 				case MsgEventUnsubscribe: // 取消关注事件
 					o := EventUnsubscribe{}
@@ -330,7 +341,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 						this.error(err)
 					}
 					for _, f := range this.eventUnsubscribe {
-						response = f(o)
+						msgCtx, response = f(msgCtx, o)
 					}
 				case MsgEventScan: // 已经关注的用户扫描带参数二维码事件
 					o := EventScan{}
@@ -339,7 +350,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 						this.error(err)
 					}
 					for _, f := range this.eventScan {
-						response = f(o)
+						msgCtx, response = f(msgCtx, o)
 					}
 				case MsgEventLocation: // 上报地理位置事件
 					o := EventLocation{}
@@ -348,7 +359,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 						this.error(err)
 					}
 					for _, f := range this.eventLocation {
-						response = f(o)
+						msgCtx, response = f(msgCtx, o)
 					}
 				case MsgEventTemplateFinish:
 					o := EventTemplateFinish{}
@@ -357,9 +368,13 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 						this.error(err)
 					}
 					for _, f := range this.eventTemplateFinish {
-						response = f(o)
+						msgCtx, response = f(msgCtx, o)
 					}
 				}
+			}
+
+			if msgCtx != nil {
+				this.MsgContextUpdate(hd.FromUserName, msgCtx)
 			}
 
 			// 消息回复
@@ -367,4 +382,24 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 			_, _ = res.Write([]byte(rr))
 		}
 	}
+}
+
+func (this *message) ContextTimeout(t int64) Imessage {
+	this.ctxTimeout = t
+	return this
+}
+
+func (this *message) MsgContext(openid string) ctx.Context {
+	var c ctx.Context
+	if !this.ctx.Contain(openid) {
+		c = ctx.Background()
+	} else {
+		c = this.ctx.Get(openid).(ctx.Context)
+	}
+	this.ctx.Set2(openid, c, this.ctxTimeout+time.Now().Unix())
+	return c
+}
+
+func (this *message) MsgContextUpdate(openid string, c ctx.Context) {
+	this.ctx.Set2(openid, c, this.ctxTimeout+time.Now().Unix())
 }
