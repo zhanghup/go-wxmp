@@ -1,11 +1,11 @@
 package wxmp
 
 import (
+	ctx "context"
 	"encoding/xml"
 	"fmt"
 	"net/http"
 	"testing"
-	"time"
 )
 
 func TestMessageText(t *testing.T) {
@@ -27,16 +27,8 @@ func TestMessageText(t *testing.T) {
 }
 
 func TestMessage_HttpServer(t *testing.T) {
-	c.Message().RegisterText(func(msg MsgText) interface{} {
-		return MsgTextRes{
-			MsgHeader: MsgHeader{
-				ToUserName:   msg.FromUserName,
-				FromUserName: msg.ToUserName,
-				CreateTime:   time.Now().Unix(),
-				MsgType:      MsgTypeText,
-			},
-			Content: "hahahah",
-		}
+	c.Message().RegisterText(func(ctx ctx.Context, msg MsgText) (i ctx.Context, i2 interface{}) {
+		return ctx, msg
 	})
 	http.HandleFunc("/test", c.Message().HttpServer())
 	http.ListenAndServe(":40018", nil)

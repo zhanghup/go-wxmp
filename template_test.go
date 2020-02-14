@@ -2,7 +2,8 @@ package wxmp
 
 import (
 	"fmt"
-	"github.com/zhanghup/go-tools"
+	"github.com/zhanghup/go-tools/ptr"
+	"github.com/zhanghup/go-tools/str"
 	"testing"
 )
 
@@ -26,13 +27,13 @@ func TestTemplate_List(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	tools.Str().JSONStringPrintln(a)
+	str.Println(a)
 }
 func TestTemplate_Send(t *testing.T) {
 	a, err := c.Template().Send(Template{
 		Touser:     "oUVhLxMBWN2uzWL5vv6ZkZbeApy8",
 		TemplateId: "kEdg_G8Hz3ZlowZ1HZ4GXeQZwRAlQ9t8k8l4PfeJUe0",
-		Url:        tools.Ptr().String("https://www.baidu.com"),
+		Url:        ptr.String("https://www.baidu.com"),
 		Data: TemplateData{
 			"first": TemplateDataItem{
 				Value: "helloworld",

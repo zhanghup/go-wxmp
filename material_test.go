@@ -2,7 +2,7 @@ package wxmp
 
 import (
 	"fmt"
-	"github.com/zhanghup/go-tools"
+	"github.com/zhanghup/go-tools/str"
 	"os"
 	"testing"
 )
@@ -16,7 +16,7 @@ func TestMaterial_NewTempMaterial(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	tools.Str().JSONStringPrintln(res)
+	str.Println(res)
 }
 
 func TestMaterial_GetTempMaterial(t *testing.T) {
@@ -26,4 +26,3 @@ func TestMaterial_GetTempMaterial(t *testing.T) {
 	}
 	fmt.Println(data)
 }
-

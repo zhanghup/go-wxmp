@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/zhanghup/go-tools"
+	"github.com/zhanghup/go-tools/htp"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -128,7 +129,7 @@ func (this *context) get(url string, param map[string]interface{}, result interf
 	token := this.cache.Get("access_token").(string)
 	url = strings.Replace(this.url()+url, "ACCESS_TOKEN", token, 1)
 
-	return tools.Http().GetI(url, param, result)
+	return htp.Http().GetI(url, param, result)
 }
 
 func (this *context) getIO(url string, param map[string]interface{}) (io.Reader, error) {
@@ -139,7 +140,7 @@ func (this *context) getIO(url string, param map[string]interface{}) (io.Reader,
 	token := this.cache.Get("access_token").(string)
 	url = strings.Replace(this.url()+url, "ACCESS_TOKEN", token, 1)
 
-	res, err := tools.Http().GetF(url, param)
+	res, err := htp.Http().GetF(url, param)
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +155,7 @@ func (this *context) post(url string, param, result interface{}) error {
 	token := this.cache.Get("access_token").(string)
 	url = strings.Replace(url, "ACCESS_TOKEN", token, 1)
 
-	return tools.Http().PostI(this.url()+url, param, result)
+	return htp.Http().PostI(this.url()+url, param, result)
 }
 
 func (this *context) postIO(url string, contentType string, param io.Reader, result interface{}) error {
