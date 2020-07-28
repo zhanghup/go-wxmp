@@ -1,7 +1,7 @@
 package wxmp
 
 import (
-	"github.com/zhanghup/go-tools/str"
+	"fmt"
 	"testing"
 )
 
@@ -27,6 +27,5 @@ func TestMenu_Get(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	str.Println(buttons)
-
+	fmt.Println(buttons)
 }
