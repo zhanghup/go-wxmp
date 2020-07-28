@@ -6,12 +6,12 @@ import (
 	"net/url"
 	"testing"
 )
-var c *context
 
+var c *context
 
 func TestToken(t *testing.T) {
 	err := c.token()
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 	fmt.Print(c.cache.Get("access_token"))
@@ -27,12 +27,11 @@ func TestUrlEncode(t *testing.T) {
 	fmt.Println()
 }
 
-
 func init() {
 	c = &context{
 		appid:     "wx5fb1dbe2ad657632",
 		appsecret: "2265142a415434c47d334ff294798b69",
-		cache:     tools.NewCache(),
+		cache:     tools.CacheCreate(true),
 		stoken:    "test",
 	}
 }

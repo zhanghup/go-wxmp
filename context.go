@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/zhanghup/go-tools"
-	"github.com/zhanghup/go-tools/htp"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -36,12 +35,12 @@ type context struct {
 	appsecret string
 	stoken    string // 这个token是配置在服务器上的token，用于数据校验
 
-	cache tools.IMap
+	cache tools.ICache
 }
 
 func NewContext(appid, appsecret, token string) IContext {
 	c := new(context)
-	c.cache = tools.NewCache()
+	c.cache = tools.CacheCreate(true)
 	c.appid = appid
 	c.appsecret = appsecret
 	c.stoken = token
@@ -87,7 +86,7 @@ func (this *context) error(err interface{}, ty string) error {
 }
 
 func (this *context) token() error {
-	if this.cache.Contain("access_token") {
+	if this.cache.Get("access_token") != nil {
 		return nil
 	}
 
@@ -112,7 +111,7 @@ func (this *context) token() error {
 	if tok.Errcode != 0 {
 		return errors.New(fmt.Sprintf("%d: %s", tok.Errcode, tok.Errmsg))
 	}
-	this.cache.Set2("access_token", tok.AccessToken, time.Now().Unix()+int64(tok.ExpiresIn))
+	this.cache.Set("access_token", tok.AccessToken, time.Now().Unix()+int64(tok.ExpiresIn))
 	return nil
 }
 
@@ -129,7 +128,7 @@ func (this *context) get(url string, param map[string]interface{}, result interf
 	token := this.cache.Get("access_token").(string)
 	url = strings.Replace(this.url()+url, "ACCESS_TOKEN", token, 1)
 
-	return htp.Http().GetI(url, param, result)
+	return tools.H().GetI(url, param, result)
 }
 
 func (this *context) getIO(url string, param map[string]interface{}) (io.Reader, error) {
@@ -140,7 +139,7 @@ func (this *context) getIO(url string, param map[string]interface{}) (io.Reader,
 	token := this.cache.Get("access_token").(string)
 	url = strings.Replace(this.url()+url, "ACCESS_TOKEN", token, 1)
 
-	res, err := htp.Http().GetF(url, param)
+	res, err := tools.H().GetF(url, param)
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +154,7 @@ func (this *context) post(url string, param, result interface{}) error {
 	token := this.cache.Get("access_token").(string)
 	url = strings.Replace(url, "ACCESS_TOKEN", token, 1)
 
-	return htp.Http().PostI(this.url()+url, param, result)
+	return tools.H().PostI(this.url()+url, param, result)
 }
 
 func (this *context) postIO(url string, contentType string, param io.Reader, result interface{}) error {

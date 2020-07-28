@@ -2,8 +2,7 @@ package wxmp
 
 import (
 	"fmt"
-	"github.com/zhanghup/go-tools/htp"
-	"github.com/zhanghup/go-tools/str"
+	"github.com/zhanghup/go-tools"
 	"net/url"
 )
 
@@ -47,7 +46,7 @@ func (this *jssdk) Auth(code string) (string, string, error) {
 		Openid      string `json:"openid"`
 	}{}
 
-	err := htp.Http().GetI(this.context.url()+"/sns/oauth2/access_token?appid={{.appid}}&secret={{.secret}}&code={{.code}}&grant_type=authorization_code", map[string]interface{}{
+	err := tools.H().GetI(this.context.url()+"/sns/oauth2/access_token?appid={{.appid}}&secret={{.secret}}&code={{.code}}&grant_type=authorization_code", map[string]interface{}{
 		"appid":  this.context.appid,
 		"secret": this.context.appsecret,
 		"code":   code,
@@ -70,7 +69,7 @@ func (this *jssdk) AuthUserInfo(code string) (*UserInfo, error) {
 		return nil, err
 	}
 
-	err = htp.Http().GetI(this.context.url()+"/sns/userinfo?access_token={{.token}}&openid={{.openid}}&lang=zh_CN", map[string]interface{}{
+	err = tools.H().GetI(this.context.url()+"/sns/userinfo?access_token={{.token}}&openid={{.openid}}&lang=zh_CN", map[string]interface{}{
 		"token":  token,
 		"openid": openid,
 	}, &r)
@@ -86,7 +85,7 @@ func (this *jssdk) AuthUserInfo(code string) (*UserInfo, error) {
 func (this *jssdk) AuthUrl(uri, scope, state string) (string, error) {
 	uri = url.QueryEscape(uri)
 
-	if !str.Contains([]string{"snsapi_base", "snsapi_userinfo"}, scope) {
+	if !tools.Str.Contains([]string{"snsapi_base", "snsapi_userinfo"}, scope) {
 		return "", this.error("授权类型错误，应为“snsapi_base” 或者 “snsapi_userinfo”")
 	}
 
