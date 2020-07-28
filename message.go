@@ -40,6 +40,7 @@ func (this *context) Message() Imessage {
 	msg = &message{
 		context:        this,
 		ctx:            tools.CacheCreate(true),
+		cancels:        tools.CacheCreate(true),
 		ctxTimeout:     600,
 		errors:         make([]func(err error), 0),
 		msgTexts:       make([]func(ctx ctx.Context, msg MsgText) (ctx.Context, interface{}), 0),
@@ -61,6 +62,7 @@ func (this *context) Message() Imessage {
 type message struct {
 	context    *context
 	ctx        tools.ICache
+	cancels    tools.ICache
 	ctxTimeout int64
 
 	errors         []func(err error)
@@ -376,7 +378,7 @@ func (this *message) HttpServer() func(res http.ResponseWriter, req *http.Reques
 			if msgCtx != nil {
 				this.MsgContextUpdate(hd.FromUserName, msgCtx)
 			} else {
-				this.ctx.Delete(hd.FromUserName)
+				this.MsgContextClose(hd.FromUserName)
 			}
 
 			// 消息回复
@@ -393,15 +395,26 @@ func (this *message) ContextTimeout(t int64) Imessage {
 
 func (this *message) MsgContext(openid string) ctx.Context {
 	var c ctx.Context
+	var cancel func()
 	if this.ctx.Get(openid) == nil {
-		c = ctx.Background()
+		c, cancel = ctx.WithCancel(ctx.Background())
 	} else {
 		c = this.ctx.Get(openid).(ctx.Context)
+		cancel = this.cancels.Get(openid).(func())
+
 	}
+	this.cancels.Set(openid, cancel, this.ctxTimeout+time.Now().Unix())
 	this.ctx.Set(openid, c, this.ctxTimeout+time.Now().Unix())
 	return c
 }
 
 func (this *message) MsgContextUpdate(openid string, c ctx.Context) {
 	this.ctx.Set(openid, c, this.ctxTimeout+time.Now().Unix())
+}
+func (this *message) MsgContextClose(openid string) {
+	this.ctx.Delete(openid)
+	fn := this.ctx.Get(openid)
+	if fn != nil {
+		fn.(func())()
+	}
 }
